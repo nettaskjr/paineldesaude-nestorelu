@@ -1,1 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel Inteligente de Saúde</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f8;
+      margin: 20px;
+    }
+    h1, h2 {
+      color: #0984e3;
+      margin-top: 30px;
+    }
+    .tab {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .tab button {
+      background-color: #dfe6e9;
+      border: none;
+      padding: 10px 18px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-weight: bold;
+      color: #2d3436;
+    }
+    .tab button.active {
+      background-color: #0984e3;
+      color: white;
+    }
+    .tabcontent {
+      display: none;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    canvas {
+      max-width: 100%;
+      margin-bottom: 40px;
+      background: #fff;
+      padding: 10px;
+      border-radius: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.95em;
+    }
+    th, td {
+      border: 1px solid #dfe6e9;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #dfe6e9;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    .status-ok { color: green; font-weight: bold; }
+    .status-alerta { color: orange; font-weight: bold; }
+    .status-risco { color: red; font-weight: bold; }
+    @media screen and (max-width: 600px) {
+      .tab button {
+        flex: 1 1 100%;
+        text-align: center;
+      }
+      table, th, td {
+        font-size: 0.85em;
+      }
+      h1 {
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
 
+  <h1>📊 Painel Inteligente de Saúde</h1>
+
+  <div class="tab">
+    <button class="tablinks active" onclick="openTab(event, 'Resumo')">Resumo Clínico</button>
+    <button class="tablinks" onclick="openTab(event, 'Graficos')">Evolução Gráfica</button>
+    <button class="tablinks" onclick="openTab(event, 'Comparativo')">Comparativo</button>
+    <button class="tablinks" onclick="openTab(event, 'Plano')">Plano de Ação</button>
+    <button class="tablinks" onclick="generatePDF()">📁 Exportar PDF</button>
+  </div>
+
+  <div id="Resumo" class="tabcontent" style="display: block;">
+    <h2>📌 Perfil Atual - Nestor Gonçalves de Resende Junior</h2>
+    <ul>
+      <li><strong>Idade:</strong> 46 anos</li>
+      <li><strong>Última coleta:</strong> 11/07/2025</li>
+      <li><strong>Médico responsável:</strong> Dr. Carlos Alberto Martins de Sousa Junior</li>
+      <li><strong>Glicose:</strong> 98 mg/dL ✅</li>
+      <li><strong>HbA1c:</strong> 5,6% ✅</li>
+      <li><strong>Colesterol total:</strong> 171 mg/dL ⚠️</li>
+      <li><strong>HDL:</strong> 39 mg/dL ⚠️</li>
+      <li><strong>Triglicerídeos:</strong> 171 mg/dL ⚠️</li>
+      <li><strong>Creatinina:</strong> 1,27 mg/dL ⚠️ — eTFG: 71 mL/min ⚠️</li>
+      <li><strong>Vitamina D:</strong> 24 ng/mL ⚠️</li>
+      <li><strong>PSA:</strong> 0,43 ng/mL ✅</li>
+    </ul>
+  </div>
+
+  <div id="Graficos" class="tabcontent">
+    <h2>📈 Gráficos de Evolução Histórica</h2>
+    <canvas id="glicoseChart"></canvas>
+    <canvas id="hba1cChart"></canvas>
+    <canvas id="colesterolChart"></canvas>
+    <canvas id="creatininaChart"></canvas>
+    <canvas id="vitaminaDChart"></canvas>
+  </div>
+
+  <div id="Comparativo" class="tabcontent">
+    <h2>⚖️ Comparativo Clínico: Lucineide x Nestor</h2>
+    <table>
+      <tr><th>Indicador</th><th>Lucineide</th><th>Nestor</th><th>Análise</th></tr>
+      <tr><td>Glicemia jejum</td><td>171 mg/dL</td><td>98 mg/dL</td><td class="status-ok">Nestor controlado</td></tr>
+      <tr><td>HbA1c</td><td>8,9%</td><td>5,6%</td><td class="status-ok">Nestor sem diabetes</td></tr>
+      <tr><td>HOMA-IR</td><td>8,9</td><td>7,5</td><td class="status-risco">Resistência em ambos</td></tr>
+      <tr><td>Colesterol</td><td>212 mg/dL</td><td>171 mg/dL</td><td class="status-ok">Nestor em melhor faixa</td></tr>
+      <tr><td>HDL</td><td>50 mg/dL</td><td>39 mg/dL</td><td class="status-alerta">Lucineide com HDL superior</td></tr>
+      <tr><td>Triglicérides</td><td>137 mg/dL</td><td>171 mg/dL</td><td class="status-alerta">Lucineide melhor</td></tr>
+      <tr><td>Creatinina</td><td>0.58</td><td>1.27</td><td class="status-alerta">Função renal melhor em Lucineide</td></tr>
+      <tr><td>Vitamina D</td><td>28 ng/mL</td><td>24 ng/mL</td><td class="status-alerta">Suplementação recomendada</td></tr>
+    </table>
+  </div>
+
+  <div id="Plano" class="tabcontent">
+    <h2>📋 Plano de Ação Personalizado</h2>
+
+    <h3>🎯 Metas</h3>
+    <ul>
+      <li>Aumentar Vitamina D para >30 ng/mL em 2 meses</li>
+      <li>Subir HDL para >40 mg/dL em até 3 meses</li>
+      <li>Reduzir triglicerídeos para <150 mg/dL</li>
+      <li>Melhorar filtração glomerular para >90 mL/min</li>
+    </ul>
+
+    <h3>📅 Cronograma Semanal</h3>
+    <ul>
+      <li><strong>Segunda:</strong> Caminhada + prato vegetal</li>
+      <li><strong>Terça:</strong> Suco verde + treino leve</li>
+      <li><strong>Quarta:</strong> Suplemento de vitamina D</li>
+      <li><strong>Quinta:</strong> Evitar açúcar simples</li>
+      <li><strong>Sexta:</strong> Revisão das metas + hidratação</li>
+    </ul>
+
+    <h3>🛒 Lista de Compras</h3>
+    <ul>
+      <li>Salmão, sardinha, chia, linhaça</li>
+      <li>Maçã, morango, brócolis,
