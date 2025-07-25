@@ -160,4 +160,23 @@
     <h3>🛒 Lista de Compras</h3>
     <ul>
       <li>Salmão, sardinha, chia, linhaça</li>
-      <li>Maçã, morango, brócolis,
+      <li>Maçã, morango, brócolis,... couve</li> 
+      <li>Castanha-do-pará, leite vegetal</li> 
+      <li>Vitamina D3 (suplemento)</li> 
+      <li>Adoçantes naturais: stevia ou xilitol</li> 
+    </ul>
+
+    <h3>🍽️ Menu Semanal</h3>
+    <ul>
+      <li><strong>Café da manhã:</strong> Omelete com espinafre ou iogurte com chia e frutas vermelhas</li>
+      <li><strong>Almoço:</strong> Arroz integral + salada fresca + frango grelhado</li>
+      <li><strong>Jantar:</strong> Sopa de legumes + ovo cozido ou salada com proteína leve</li>
+    </ul>
+
+    </div>
+
+    <script>function openTab(evt, tabName) {const contents = document.getElementsByClassName("tabcontent");for (let i = 0; i < contents.length; i++) {contents[i].style.display = "none";}const tabs = document.getElementsByClassName("tablinks");for (let i = 0; i < tabs.length; i++) {tabs[i].classList.remove("active");}document.getElementById(tabName).style.display = "block";evt.currentTarget.classList.add("active");}const configChart = (id, labels, lucineideData, nestorData, unit) => {new Chart(document.getElementById(id), {type: 'line',data: {labels,datasets: [{label: 'Lucineide',data: lucineideData,borderColor: '#e17055',backgroundColor: '#fab1a0',fill: false,tension: 0.3},{label: 'Nestor',data: nestorData,borderColor: '#00b894',backgroundColor: '#81ecec',fill: false,tension: 0.3}]},options: {responsive: true,plugins: {tooltip: {callbacks: {label: ctx => `${ctx.dataset.label}: ${ctx.raw} ${unit}`}}},scales: { y: { beginAtZero: false } }}});};const datas = ['2016', '2018', '2019', '2020', '2025'];configChart('glicoseChart', datas, [171], [null, null, null, null, 98], 'mg/dL');configChart('hba1cChart', datas, [8.9], [null, null, null, null, 5.6], '%');configChart('colesterolChart', datas, [212], [144, 148, 142, 203, 171], 'mg/dL');configChart('creatininaChart', datas, [0.58], [1.42, 1.06, 1.18, 1.47, 1.27], 'mg/dL');configChart('vitaminaDChart', datas, [28], [35, 31, 24], 'ng/mL');async function generatePDF() {const { jsPDF } = window.jspdf;const doc = new jsPDF('p', 'pt', 'a4');await html2canvas(document.body, { scale: 2 }).then(canvas => {const imgData = canvas.toDataURL('image/png');const imgProps = doc.getImageProperties(imgData);const pdfWidth = doc.internal.pageSize.getWidth();const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);doc.save('painel-saude-nestor.pdf');});}</script>
+  </body>
+</html>```
+
+
